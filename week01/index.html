@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 1 三個問題：交易規則 vs. 買進持有</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:      #F5F2EA;
+    --paper-dim:  #EDE9DD;
+    --ink:        #1E2A2F;
+    --ink-soft:   #4B5A5F;
+    --rule:       #C9C0AC;
+    --teal:       #2F5D57;
+    --teal-dark:  #1E3E3A;
+    --gold:       #A9832E;
+    --rust:       #9C4A3C;
+    --good:       #2F5D57;
+    --bad:        #9C4A3C;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Inter", -apple-system, "Noto Sans TC", sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background:var(--gold); color:var(--paper); }
+
+  .page{
+    max-width:760px;
+    margin:0 auto;
+    padding:64px 28px 120px;
+  }
+
+  /* ---------- Header ---------- */
+  .masthead{
+    border-bottom:2px solid var(--ink);
+    padding-bottom:22px;
+    margin-bottom:40px;
+  }
+  .masthead .course-tag{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:"Spectral", serif;
+    font-weight:600;
+    font-size:clamp(28px, 5vw, 38px);
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--teal-dark);
+  }
+  .masthead .sub{
+    font-size:16px;
+    color:var(--ink-soft);
+    max-width:56ch;
+  }
+
+  .intro{
+    font-size:16.5px;
+    color:var(--ink);
+    margin-bottom:56px;
+    padding-left:18px;
+    border-left:3px solid var(--gold);
+  }
+  .intro strong{ color:var(--teal-dark); }
+
+  /* ---------- Issue sections ---------- */
+  .issue{
+    margin-bottom:64px;
+  }
+  .issue-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:6px;
+  }
+  .issue-num{
+    font-family:"Spectral", serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--paper);
+    background:var(--teal-dark);
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .issue h2{
+    font-family:"Spectral", serif;
+    font-weight:600;
+    font-size:24px;
+    margin:0;
+    color:var(--ink);
+  }
+  .issue-en{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    font-style:italic;
+    margin:2px 0 22px 44px;
+  }
+
+  .issue p{ margin:0 0 16px; font-size:15.8px; }
+  .issue p.lead{ font-size:16.5px; color:var(--teal-dark); font-weight:500; }
+
+  .callout{
+    background:var(--paper-dim);
+    border-radius:2px;
+    padding:16px 18px;
+    margin:18px 0 22px;
+    font-size:15px;
+    border-left:3px solid var(--teal);
+  }
+  .callout .label{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px;
+    letter-spacing:0.03em;
+    color:var(--teal);
+    display:block;
+    margin-bottom:6px;
+  }
+
+  table.data{
+    width:100%;
+    border-collapse:collapse;
+    margin:18px 0 24px;
+    font-size:14.5px;
+  }
+  table.data caption{
+    text-align:left;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+    font-family:"IBM Plex Mono", monospace;
+  }
+  table.data th, table.data td{
+    padding:9px 12px;
+    text-align:left;
+    border-bottom:1px solid var(--rule);
+  }
+  table.data th{
+    font-weight:600;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    text-transform:none;
+    border-bottom:1.5px solid var(--ink);
+  }
+  table.data td.num, table.data th.num{
+    text-align:right;
+    font-family:"IBM Plex Mono", monospace;
+  }
+  table.data tr.highlight td{ background:rgba(169,131,46,0.10); }
+
+  /* timeline for issue 2 */
+  .timeline{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin:26px 0 8px;
+    position:relative;
+    gap:6px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    top:9px;
+    left:5%;
+    right:5%;
+    height:2px;
+    background:var(--rule);
+  }
+  .tl-node{
+    flex:1;
+    text-align:center;
+    position:relative;
+    font-size:13px;
+  }
+  .tl-dot{
+    width:18px; height:18px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--teal);
+    margin:0 auto 10px;
+    position:relative;
+    z-index:1;
+  }
+  .tl-node.assume .tl-dot{ border-color:var(--gold); background:var(--gold); }
+  .tl-date{ font-weight:600; color:var(--ink); font-family:"IBM Plex Mono", monospace; font-size:12.5px; }
+  .tl-label{ color:var(--ink-soft); font-size:12.5px; margin-top:2px; }
+
+  /* ---------- Practice blocks ---------- */
+  .practice{
+    margin-top:30px;
+    border:1px solid var(--rule);
+    background:#FBFAF6;
+    padding:22px 22px 6px;
+  }
+  .practice-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .practice-head .pencil{
+    font-family:"Spectral", serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:15px;
+    color:var(--rust);
+  }
+
+  .q{
+    margin-bottom:26px;
+    padding-bottom:22px;
+    border-bottom:1px dashed var(--rule);
+  }
+  .q:last-child{ border-bottom:none; }
+  .q-prompt{
+    font-size:15.3px;
+    font-weight:500;
+    margin-bottom:12px;
+    color:var(--ink);
+  }
+
+  .options{ display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+  .opt{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 12px;
+    border:1px solid var(--rule);
+    cursor:pointer;
+    font-size:14.5px;
+    background:var(--paper);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt:hover{ border-color:var(--teal); }
+  .opt input{ margin-top:3px; accent-color:var(--teal); flex-shrink:0; }
+  .opt.correct{ border-color:var(--good); background:rgba(47,93,87,0.09); }
+  .opt.incorrect{ border-color:var(--bad); background:rgba(156,74,60,0.08); }
+
+  .fillblank{
+    width:100%;
+    padding:10px 12px;
+    font-family:"Inter", sans-serif;
+    font-size:14.5px;
+    border:1px solid var(--rule);
+    background:var(--paper);
+    color:var(--ink);
+    margin-bottom:12px;
+  }
+  .fillblank:focus{ outline:none; border-color:var(--teal); }
+
+  .check-btn{
+    font-family:"Inter", sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    padding:8px 16px;
+    background:var(--teal-dark);
+    color:var(--paper);
+    border:none;
+    cursor:pointer;
+  }
+  .check-btn:hover{ background:var(--teal); }
+
+  .feedback{
+    margin-top:12px;
+    padding:10px 14px;
+    font-size:14px;
+    border-left:3px solid var(--rule);
+    display:none;
+  }
+  .feedback.show{ display:block; }
+  .feedback.good{ border-left-color:var(--good); background:rgba(47,93,87,0.07); }
+  .feedback.bad{ border-left-color:var(--bad); background:rgba(156,74,60,0.07); }
+  .feedback .verdict{ font-weight:700; }
+  .feedback.good .verdict{ color:var(--good); }
+  .feedback.bad .verdict{ color:var(--bad); }
+
+  details.reveal{
+    margin-top:6px;
+    font-size:14px;
+  }
+  details.reveal summary{
+    cursor:pointer;
+    color:var(--teal);
+    font-weight:600;
+    list-style:none;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  details.reveal summary::-webkit-details-marker{ display:none; }
+  details.reveal summary::before{
+    content:"";
+    width:0; height:0;
+    border-left:5px solid var(--teal);
+    border-top:4px solid transparent;
+    border-bottom:4px solid transparent;
+    transition:transform .15s ease;
+  }
+  details.reveal[open] summary::before{ transform:rotate(90deg); }
+  details.reveal .answer{
+    margin-top:10px;
+    padding:12px 14px;
+    background:var(--paper-dim);
+    border-left:3px solid var(--gold);
+    color:var(--ink);
+  }
+
+  footer{
+    margin-top:70px;
+    padding-top:20px;
+    border-top:1px solid var(--rule);
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width:520px){
+    .page{ padding:40px 18px 90px; }
+    .timeline{ flex-direction:column; gap:16px; }
+    .timeline::before{ display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="course-tag">M0L23910 · AI in FinTech · Week 01</div>
+    <h1>三個問題，看懂一次 AAPL 回測比較</h1>
+    <div class="sub">交易規則 vs. 買進持有：在動手寫程式之前，先把「比較什麼」「賺到的是誰的錢」「結果能證明什麼」想清楚。</div>
+  </div>
+
+  <div class="intro">
+    課程的核心問題是：<strong>能不能把一個投資想法變成交易決策，再檢驗證據是否支持它？</strong>
+    這一頁用同一個 AAPL 範例，依序拆解三個 Issue，每一段後面附上一組小練習，用來檢查自己是不是真的理解了，而不只是看過。
+  </div>
+
+  <!-- ISSUE 1 -->
+  <section class="issue" id="issue1">
+    <div class="issue-head">
+      <div class="issue-num">1</div>
+      <h2>我們到底在比較什麼？</h2>
+    </div>
+    <div class="issue-en">What exactly are we comparing?</div>
+
+    <p class="lead">「這個策略比較好」是一句不完整的話——賺得多、跌得少、交易得少，是三個不同的問題。</p>
+    <p>這次選定的問題是：<strong>固定的 AAPL 交易規則，最終是否比買進持有 AAPL 賺更多錢？</strong></p>
+
+    <table class="data">
+      <caption>兩個帳戶的規則</caption>
+      <thead>
+        <tr><th>帳戶</th><th>決策方式</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>交易規則</td><td>收盤價高於 5 個交易日前收盤價 → 轉為持有 AAPL；否則轉為持有現金</td></tr>
+        <tr><td>買進持有</td><td>一開始買進 AAPL，全程持有不動</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <span class="label">共同條件</span>
+      皆自 2024/1/2 起以 USD 1,000 起算，計算至 6/28；允許零股；排除交易成本、股息、稅與現金利息。這是假設性的帳戶規則，不是真實成交紀錄。
+    </div>
+
+    <div class="practice">
+      <div class="practice-head"><span class="pencil">練習 · Issue 1</span></div>
+
+      <div class="q" data-qid="1-1">
+        <div class="q-prompt">Q1. 如果把問題換成「這個規則交易得比較少嗎？」，該去數哪一項，而不是只看最終帳戶餘額？</div>
+        <div class="options">
+          <label class="opt"><input type="radio" name="1-1" value="a"><span>兩個帳戶的最終價值差距</span></label>
+          <label class="opt"><input type="radio" name="1-1" value="b"><span>規則帳戶在現金與 AAPL 之間切換的次數</span></label>
+          <label class="opt"><input type="radio" name="1-1" value="c"><span>AAPL 股價本身在期間內的波動幅度</span></label>
+        </div>
+        <button class="check-btn" data-correct="b">檢查答案</button>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="q" data-qid="1-2">
+        <div class="q-prompt">Q2. 一組報告扣成本前的結果，另一組報告扣成本後的結果，在直接比較兩者之前，最需要先做什麼？</div>
+        <div class="options">
+          <label class="opt"><input type="radio" name="1-2" value="a"><span>統一計算條件，讓兩邊都用同一種方式處理成本</span></label>
+          <label class="opt"><input type="radio" name="1-2" value="b"><span>直接比較最終數字，成本高低不影響結論</span></label>
+          <label class="opt"><input type="radio" name="1-2" value="c"><span>只採用扣成本後的那一組，因為比較保守</span></label>
+        </div>
+        <button class="check-btn" data-correct="a">檢查答案</button>
+        <div class="feedback"></div>
+      </div>
+
+      <details class="reveal">
+        <summary>再想一下：規則帳戶如果自己賺錢，就算贏了嗎？</summary>
+        <div class="answer">不算。問題問的是「跟買進持有比誰多」，不是「規則本身有沒有正報酬」。規則帳戶就算賺錢，只要輸給買進持有，就不能說它回答了這個問題。</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ISSUE 2 -->
+  <section class="issue" id="issue2">
+    <div class="issue-head">
+      <div class="issue-num">2</div>
+      <h2>帳戶真的賺到那段價格變化了嗎？</h2>
+    </div>
+    <div class="issue-en">Did our account earn that price change?</div>
+
+    <p class="lead">股價上漲，不代表帳戶當時正持有股票——訊號成立的時間，和真正持股的時間，是兩件事。</p>
+
+    <table class="data">
+      <caption>Yahoo Finance / yfinance，AAPL 實際收盤價（USD/股）</caption>
+      <thead><tr><th>日期</th><th class="num">收盤價</th></tr></thead>
+      <tbody>
+        <tr><td>2024-01-03</td><td class="num">184.25</td></tr>
+        <tr class="highlight"><td>2024-01-10</td><td class="num">186.19</td></tr>
+        <tr class="highlight"><td>2024-01-11</td><td class="num">185.59</td></tr>
+        <tr class="highlight"><td>2024-01-12</td><td class="num">185.92</td></tr>
+      </tbody>
+    </table>
+
+    <div class="timeline">
+      <div class="tl-node">
+        <div class="tl-dot"></div>
+        <div class="tl-date">1/10 收盤後</div>
+        <div class="tl-label">訊號產生：要求持股</div>
+      </div>
+      <div class="tl-node assume">
+        <div class="tl-dot"></div>
+        <div class="tl-date">1/11 收盤</div>
+        <div class="tl-label">假設買進</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-dot"></div>
+        <div class="tl-date">1/12 收盤</div>
+        <div class="tl-label">評價持股</div>
+      </div>
+    </div>
+
+    <p>訊號在 1/10 收盤「之後」才算出來，來不及在當天成交，因此規則假設在 <strong>1/11 收盤</strong>買進。帳戶真正賺到的，是 1/11 → 1/12 這段：從 185.59 漲到 185.92，約 <strong>USD 0.33</strong>（未扣成本）。1/3 → 1/10 的大漲只是促成訊號的資料，不是這筆新持股賺到的錢。</p>
+
+    <div class="practice">
+      <div class="practice-head"><span class="pencil">練習 · Issue 2</span></div>
+
+      <div class="q" data-qid="2-1">
+        <div class="q-prompt">Q1. 這筆持股實際賺到 USD 0.33 的獲利，屬於哪一段持有區間？</div>
+        <div class="options">
+          <label class="opt"><input type="radio" name="2-1" value="a"><span>2024-01-03 → 2024-01-10</span></label>
+          <label class="opt"><input type="radio" name="2-1" value="b"><span>2024-01-10 → 2024-01-11</span></label>
+          <label class="opt"><input type="radio" name="2-1" value="c"><span>2024-01-11 → 2024-01-12</span></label>
+        </div>
+        <button class="check-btn" data-correct="c">檢查答案</button>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="q" data-qid="2-2">
+        <div class="q-prompt">Q2. 如果實際成交要等到 1/12 收盤之後才完成，USD 0.33 這筆獲利還能照原樣算數嗎？</div>
+        <div class="options">
+          <label class="opt"><input type="radio" name="2-2" value="a"><span>可以，因為訊號本來就是 1/10 產生的</span></label>
+          <label class="opt"><input type="radio" name="2-2" value="b"><span>不行，持有區間要整段往後移，改用之後才成立的兩個收盤價重新計算</span></label>
+          <label class="opt"><input type="radio" name="2-2" value="c"><span>不行，應該直接用 1/3 到 1/12 的總漲幅取代</span></label>
+        </div>
+        <button class="check-btn" data-correct="b">檢查答案</button>
+        <div class="feedback"></div>
+      </div>
+
+      <details class="reveal">
+        <summary>再想一下：為什麼這件事在回測裡特別危險？</summary>
+        <div class="answer">把「促成訊號的漲幅」誤算進「帳戶的獲利」，就是資料洩漏（look-ahead bias）——用了帳戶當時其實還拿不到的未來資訊，會讓策略看起來比實際更會賺。</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ISSUE 3 -->
+  <section class="issue" id="issue3">
+    <div class="issue-head">
+      <div class="issue-num">3</div>
+      <h2>這個結果到底能證明什麼？</h2>
+    </div>
+    <div class="issue-en">What does the result actually support?</div>
+
+    <p class="lead">要回答「規則是否贏過買進持有」，得比較兩個帳戶，不能只看規則帳戶自己賺不賺錢。</p>
+
+    <table class="data">
+      <caption>Week 4 回測預覽（未扣成本、股息、稅、現金利息）</caption>
+      <thead>
+        <tr><th>日期</th><th class="num">交易規則 (USD)</th><th class="num">買進持有 (USD)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2024-01-02</td><td class="num">1,000.00</td><td class="num">1,000.00</td></tr>
+        <tr class="highlight"><td>2024-06-28</td><td class="num">1,068.80</td><td class="num">1,134.56</td></tr>
+      </tbody>
+    </table>
+
+    <p>規則帳戶賺了 USD 68.80，是正報酬；但買進持有賺了 USD 134.56，規則帳戶最終落後 USD 65.76。<strong>正報酬本身不能證明規則打敗了 benchmark</strong>——這裡結果正好相反。</p>
+
+    <div class="callout">
+      <span class="label">這張表沒告訴你的事</span>
+      中途帳戶有沒有跌破過起始的 USD 1,000？不知道，因為表裡只有頭尾兩個時間點。這個結果也不能推論未來表現，只描述這一段樣本期間。
+    </div>
+
+    <div class="practice">
+      <div class="practice-head"><span class="pencil">練習 · Issue 3</span></div>
+
+      <div class="q" data-qid="3-1">
+        <div class="q-prompt">Q1. 算算看：規則帳戶最終落後買進持有多少美元？（只填數字，例如 65.76）</div>
+        <input type="text" class="fillblank" placeholder="輸入你的答案">
+        <button class="check-btn" data-correct="65.76" data-type="text">檢查答案</button>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="q" data-qid="3-2">
+        <div class="q-prompt">Q2. 哪一句話最準確地描述這個樣本期間的結果？</div>
+        <div class="options">
+          <label class="opt"><input type="radio" name="3-2" value="a"><span>這個交易規則證明了比買進持有更好的獲利能力</span></label>
+          <label class="opt"><input type="radio" name="3-2" value="b"><span>這個交易規則在這段期間結算高於起始本金，但低於買進持有</span></label>
+          <label class="opt"><input type="radio" name="3-2" value="c"><span>這個交易規則未來也會持續跑輸買進持有</span></label>
+        </div>
+        <button class="check-btn" data-correct="b">檢查答案</button>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="q" data-qid="3-3">
+        <div class="q-prompt">Q3. 光憑頭尾兩個餘額（1/2 與 6/28），能不能證明帳戶中途從未跌破 USD 1,000？</div>
+        <div class="options">
+          <label class="opt"><input type="radio" name="3-3" value="a"><span>能，起點和終點都在 1,000 以上就夠了</span></label>
+          <label class="opt"><input type="radio" name="3-3" value="b"><span>不能，需要更頻繁的中途觀察值（例如每日淨值）才能回答</span></label>
+        </div>
+        <button class="check-btn" data-correct="b">檢查答案</button>
+        <div class="feedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    整理自 Week 1 課堂教材，供課後複習使用；教材本身聲明課堂範例僅供教學，不構成投資建議。
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.check-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.closest('.q');
+      const feedback = q.querySelector('.feedback');
+      const correct = btn.getAttribute('data-correct');
+      const isText = btn.getAttribute('data-type') === 'text';
+
+      if (isText) {
+        const input = q.querySelector('.fillblank');
+        const val = input.value.trim().replace(/^\$/, '');
+        const numVal = parseFloat(val);
+        const numCorrect = parseFloat(correct);
+        const ok = !isNaN(numVal) && Math.abs(numVal - numCorrect) < 0.01;
+        feedback.classList.remove('good','bad');
+        feedback.classList.add('show', ok ? 'good' : 'bad');
+        feedback.innerHTML = ok
+          ? '<span class="verdict">對了。</span> 1,134.56 − 1,068.80 = 65.76，規則帳戶落後買進持有 USD 65.76。'
+          : '<span class="verdict">再算一次。</span> 用買進持有的最終值減去交易規則的最終值：1,134.56 − 1,068.80。';
+        return;
+      }
+
+      const options = q.querySelectorAll('.opt');
+      const selected = q.querySelector('input[type="radio"]:checked');
+      options.forEach(o => o.classList.remove('correct','incorrect'));
+
+      if (!selected) {
+        feedback.classList.remove('good');
+        feedback.classList.add('show','bad');
+        feedback.innerHTML = '<span class="verdict">先選一個選項。</span>';
+        return;
+      }
+
+      const selectedOpt = selected.closest('.opt');
+      const isCorrect = selected.value === correct;
+      const correctOpt = q.querySelector('input[value="' + correct + '"]').closest('.opt');
+
+      if (isCorrect) {
+        selectedOpt.classList.add('correct');
+      } else {
+        selectedOpt.classList.add('incorrect');
+        correctOpt.classList.add('correct');
+      }
+
+      feedback.classList.remove('good','bad');
+      feedback.classList.add('show', isCorrect ? 'good' : 'bad');
+      feedback.innerHTML = isCorrect
+        ? '<span class="verdict">對了。</span>'
+        : '<span class="verdict">不太對。</span> 正確答案已用綠框標出。';
+    });
+  });
+</script>
+
+</body>
+</html>
