@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinTech-Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:      #F5F2EA;
+    --paper-dim:  #EDE9DD;
+    --ink:        #1E2A2F;
+    --ink-soft:   #4B5A5F;
+    --rule:       #C9C0AC;
+    --teal:       #2F5D57;
+    --teal-dark:  #1E3E3A;
+    --gold:       #A9832E;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Inter", -apple-system, "Noto Sans TC", sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--gold); color:var(--paper); }
+
+  .page{ max-width:720px; margin:0 auto; padding:64px 28px 120px; }
+
+  .masthead{ border-bottom:2px solid var(--ink); padding-bottom:22px; margin-bottom:44px; }
+  .masthead .course-tag{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:"Spectral", serif;
+    font-weight:600;
+    font-size:clamp(28px, 5vw, 38px);
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--teal-dark);
+  }
+  .masthead .sub{ font-size:16px; color:var(--ink-soft); max-width:52ch; }
+
+  .weeks{ list-style:none; margin:0; padding:0; }
+  .week-item{
+    border-bottom:1px solid var(--rule);
+  }
+  .week-item:first-child{ border-top:1px solid var(--rule); }
+
+  .week-link{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding:20px 4px;
+    text-decoration:none;
+    color:inherit;
+  }
+  .week-link:hover .week-title{ color:var(--teal); }
+  .week-link:hover .week-num{ background:var(--teal-dark); }
+
+  .week-num{
+    font-family:"Spectral", serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--paper);
+    background:var(--ink);
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    transition:background .15s ease;
+  }
+  .week-body{ flex:1; min-width:0; }
+  .week-title{
+    font-family:"Spectral", serif;
+    font-weight:600;
+    font-size:18px;
+    color:var(--ink);
+    margin:0 0 3px;
+    transition:color .15s ease;
+  }
+  .week-desc{ font-size:14px; color:var(--ink-soft); }
+  .week-arrow{ color:var(--rule); font-size:18px; flex-shrink:0; }
+  .week-link:hover .week-arrow{ color:var(--teal); }
+
+  .placeholder{
+    padding:20px 4px;
+    color:var(--ink-soft);
+    font-size:14px;
+    font-style:italic;
+    border-bottom:1px solid var(--rule);
+  }
+
+  footer{
+    margin-top:60px;
+    padding-top:20px;
+    border-top:1px solid var(--rule);
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  footer a{ color:var(--teal); }
+
+  @media (max-width:480px){
+    .page{ padding:40px 18px 90px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="course-tag">M0L23910 · AI in FinTech</div>
+    <h1>課程學習筆記</h1>
+    <div class="sub">每週課堂重點整理與練習，依週次排列。</div>
+  </div>
+
+  <ul class="weeks">
+    <li class="week-item">
+      <a class="week-link" href="week01/">
+        <div class="week-num">1</div>
+        <div class="week-body">
+          <div class="week-title">Week 01 · 課程方向</div>
+          <div class="week-desc">交易規則 vs. 買進持有：三個問題看懂一次回測比較</div>
+        </div>
+        <div class="week-arrow">›</div>
+      </a>
+    </li>
+
+    <!-- 之後每週新增一個 <li class="week-item"> 區塊，複製上面 week01 那一段改編號、標題、連結即可 -->
+
+    <li class="placeholder">Week 02 · 尚未發布</li>
+  </ul>
+
+  <footer>
+    原始碼與教材：<a href="https://github.com/cyanlee1147/FinTech-Learn">github.com/cyanlee1147/FinTech-Learn</a>
+  </footer>
+
+</div>
+</body>
+</html>
